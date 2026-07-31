@@ -3,14 +3,18 @@ package health
 import (
 	"encoding/json"
 	"net/http"
+	"sync"
 )
 
 // Handler serves health and readiness probes.
-type Handler struct{}
+type Handler struct {
+	mu     sync.RWMutex
+	checks []Check
+}
 
-// NewHandler creates a health handler.
-func NewHandler() *Handler {
-	return &Handler{}
+// NewHandler creates a health handler with optional readiness checks.
+func NewHandler(checks ...Check) *Handler {
+	return &Handler{checks: append([]Check(nil), checks...)}
 }
 
 // Health returns a simple ok response for liveness probes.

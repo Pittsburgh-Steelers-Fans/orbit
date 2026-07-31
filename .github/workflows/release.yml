@@ -58,7 +58,14 @@ jobs:
           path: dist
           merge-multiple: true
 
+      - name: Generate checksums
+        run: |
+          cd dist
+          shasum -a 256 orbit-* > checksums.txt
+
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*
+          files: |
+            dist/orbit-*
+            dist/checksums.txt
